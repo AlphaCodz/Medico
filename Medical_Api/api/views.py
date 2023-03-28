@@ -6,7 +6,7 @@ from rest_framework.decorators import APIView
 
 # Create your views here.
 class PatientReg(BaseView):
-    required_post_fields = ["first_name", "last_name", "email", "is_medic", "is_patient", "password"]
+    required_post_fields = ["first_name", "last_name", "email", "password"]
     def post(self, request, format=None):
         conn = super().post(request, format)
         if not conn:
@@ -22,9 +22,10 @@ class PatientReg(BaseView):
             }
             return Response(resp, 400)
         patient = PrimaryUser(email=request.data["email"])
-        patient.first_name = request.data("first_name")
-        patient.last_name = request.data("last_name")
-        patient.email = request.data("email")
+        patient.first_name = request.data["first_name"]
+        patient.last_name = request.data["last_name"]
+        patient.email = request.data["email"]
+        patient.set_password(raw_password=request.data["password"])
         patient.is_patient = True
         patient.is_medic = False
         patient.save()
