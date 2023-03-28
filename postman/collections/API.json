@@ -1,0 +1,64 @@
+{
+	"info": {
+		"_postman_id": "afd654d6-cb05-468d-bfa5-d9975de5ddfc",
+		"name": "API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_uid": "21864423-afd654d6-cb05-468d-bfa5-d9975de5ddfc"
+	},
+	"item": [
+		{
+			"name": "PATIENT REG",
+			"id": "c249da5e-b489-435d-9a60-d873585807c8",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "first_name",
+							"value": "Alpha",
+							"type": "text"
+						},
+						{
+							"key": "last_name",
+							"value": "Leader",
+							"type": "text"
+						},
+						{
+							"key": "email",
+							"value": "alphaco@gmail.com",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "ALeader102030",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/patient/reg/",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"patient",
+						"reg",
+						""
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
