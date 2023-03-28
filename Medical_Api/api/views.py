@@ -3,6 +3,8 @@ from helpers.views import BaseView
 from .models import PrimaryUser, Appointment
 from rest_framework.response import Response
 from rest_framework.decorators import APIView
+from rest_framework_simplejwt.tokens import RefreshToken
+from .helper import Jsonify_user
 
 # Create your views here.
 class PatientReg(BaseView):
@@ -69,7 +71,15 @@ class Login(BaseView):
             }
             return Response(resp)
         if user.check_password(raw_password=request.data["password"]):
-            pass    
+            token = RefreshToken.for_user(user)
+            print(token)
+            resp = {
+                "code":200,
+                "message": "Login Successful",
+                "user_data": Jsonify_user(user),
+                "token": str(token.access_token)   
+            }
+            return Response(resp, 200)
         
         
         
