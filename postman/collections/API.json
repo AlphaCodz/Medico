@@ -20,22 +20,22 @@
 					"formdata": [
 						{
 							"key": "first_name",
-							"value": "Alpha",
+							"value": "Seun",
 							"type": "text"
 						},
 						{
 							"key": "last_name",
-							"value": "Leader",
+							"value": "Otega",
 							"type": "text"
 						},
 						{
 							"key": "email",
-							"value": "alphaco@gmail.com",
+							"value": "otega2@gmail.com",
 							"type": "text"
 						},
 						{
 							"key": "password",
-							"value": "ALeader102030",
+							"value": "ALer102030",
 							"type": "text"
 						}
 					]
@@ -55,6 +55,102 @@
 						"patient",
 						"reg",
 						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DOCTOR REG",
+			"id": "50109724-7fa6-4a3c-a93a-65dc657591f4",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "first_name",
+							"value": "Adewale",
+							"type": "text"
+						},
+						{
+							"key": "last_name",
+							"value": "Abdulkhalid",
+							"type": "text"
+						},
+						{
+							"key": "email",
+							"value": "AAKal@gmail.com",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "ALeader102030",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/doctor/reg/",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"doctor",
+						"reg",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "LOGIN [generic]",
+			"id": "bd4723b5-2f32-4073-a18a-0f763815d172",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "email",
+							"value": "AAKal@gmail.com",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "ALeader102030",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/login",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"login"
 					]
 				}
 			},
