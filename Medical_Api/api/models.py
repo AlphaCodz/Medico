@@ -31,16 +31,11 @@ class PrimaryUser(AbstractBaseUser):
     
 class Appointment(models.Model):
     user = models.ForeignKey(PrimaryUser, on_delete=models.PROTECT)
-    schedule_date = models.DateField(null=True)
-    schedule_time  = models.TimeField(null=True)
+    schedule_date = models.DateTimeField(null=True)
     # referral_letter = models.FileField()
     
     def __str__(self):
         return self.user.first_name
-    
-    
-    
-    
     
 # - Register for patients (post)
 # - Register for doctors (post)

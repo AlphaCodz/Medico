@@ -1,15 +1,20 @@
 from django.shortcuts import render
+from django.http import JsonResponse
 from helpers.views import BaseView
 from .models import PrimaryUser, Appointment
 from rest_framework.response import Response
 from rest_framework.decorators import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
 from .helper import Jsonify_user
+from .permissions import IsPatient
+from rest_framework.permissions import IsAuthenticated
+from datetime import datetime
 
 # Create your views here.
 class PatientReg(BaseView):
     required_post_fields = ["first_name", "last_name", "email", "password"]
     def post(self, request, format=None):
+        super().post(request, format)
         if PrimaryUser.objects.filter(email=request.data["email"]).exists():
             resp = {
                 "code":400,
@@ -80,7 +85,42 @@ class Login(BaseView):
                 "token": str(token.access_token)   
             }
             return Response(resp, 200)
+
+class LogoutView(APIView):
+    permission_classes = (IsAuthenticated)
+    def post(self, request):
+        try:
+            refresh_token = request.data["refresh_token"]
+            token = RefreshToken(refresh_token)
+            token.blacklist()
+            return Response(status=status.HTTP_205_RESET_CONTENT)
+        except Exception as e:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        
+        
+# class CreateAppointment(APIView):
+#     permission_classes = [IsPatient, ]
+#     def post(self, request, medic_id): 
+#         # CHECK MEDIC ID
+#         try:
+#             medic = PrimaryUser.objects.get(id=medic_id, is_medic=True)
+#         except PrimaryUser.DoesNotExist:
+#             return JsonResponse({'error': f'Medic with id {medic_id} does not exist or is not a medic.'}, status=400)
+        
+#         schedule_date = request.POST.get('schedule_date')
+        
+#         appointment = Appointment(user=user, assigned_medic=medic, schedule_date=schedule_date)
+#         appointment.save()
+#         return JsonResponse({'success': f'Appointment created for {request.first_name} {request.last_name} with {medic.first_name} {medic.last_name}.'}, status=201)
+    
         
         
         
+        
+        
+        
+        
+        
+    
+    
         
