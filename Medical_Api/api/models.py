@@ -28,7 +28,45 @@ class PrimaryUser(AbstractBaseUser):
         
 
 class MedicalData(models.Model):
-    pass
+    RACE = (
+        ("BLACK", "BLACK"),
+        ("WHITE", "WHITE"),
+        ("COLORED", "COLORED")
+    )
+    
+    OCCUPATION = (
+        ("VENDOR", "VENDOR"),
+        ("BUSINESS OWNER", "BUSINESS OWNER"),
+        ("CIVIL SERVANT", "CIVIL SERVANT"),
+        ("EDUCATOR", "EDUCATOR"),
+        ("DRIVER", "DRIVER"),
+        ("CONSTRUCTION WORKER", "CONSTRUCTION WORKER"),
+        ("LABOURER", "LABOURER"),
+        ("STUDENT/PUPIL", "STUDENT/PUPIL"),
+        ("GENERAL ASSISTANT", "GENERAL ASSISTANT")       
+    )
+    
+    BLOOD_GROUP = (
+        ("O+", "O+"),
+        ("O-", "O-"),
+        ("A+", "A+"),
+        ("A-", "A-"),
+        ("B+", "B+"),
+        ("B-", "B-"),
+        ("AB+", "AB+"),
+        ("AB-", "AB-") 
+    )
+    
+    user = models.OneToOneField(PrimaryUser, on_delete=models.CASCADE)
+    race = models.CharField(choices=RACE, max_length=7)
+    occupation = models.CharField(choices=OCCUPATION, max_length=25)
+    blood_group = models.CharField(choices=BLOOD_GROUP, max_length=4)
+    medical_cases = models.TextField()
+    
+    def __str__(self):
+        return self.user.first_name
+    
+    
 
         
         
