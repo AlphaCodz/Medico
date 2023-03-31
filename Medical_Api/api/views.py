@@ -9,6 +9,7 @@ from .helper import Jsonify_user
 from .permissions import IsPatient
 from rest_framework.permissions import IsAuthenticated
 from datetime import datetime
+from django.utils import timezone
 
 # Create your views here.
 class PatientReg(BaseView):
@@ -129,7 +130,7 @@ class AddMedData(BaseView):
         medical_data.is_submitted=True
         medical_data.save()
         resp = {
-            "code":200,
+            "code":201,
             "messsage": "Medical Data Added Successfully",
             "medical_data": {
                 "patient": Jsonify_user(user),
@@ -143,7 +144,7 @@ class AddMedData(BaseView):
                 "has_submitted": medical_data.is_submitted
             }
         }
-        return Response(resp, 200)
+        return Response(resp, 201)
     
     
 class MedStatus(APIView):
@@ -165,25 +166,32 @@ class MedStatus(APIView):
             return Response(resp, 200)   
         
             
-            
-            
+class CreateAppointment(APIView):
+    permission_classes = [IsPatient,]
+    def post(self, request, medic_id): 
+        this_user = request.user
+        # Get User
+        if not this_user:
+            return {
+                "code": 404,
+                "message": "User Not Found"
+            }
+        appointment = Appointment(user=this_user)
+        schedule_date_str = request.data.get("schedule_date")
+        appointment.schedule_date = timezone.make_aware(datetime.strptime(schedule_date_str, f'%Y-%m-%d %H:%M:%S'))
+        appointment.save()
+        resp = {
+            "code":201,
+            "user": Jsonify_user(this_user),
+            "message": "Appointment Created Succesfully",
+            "appointment date": str(appointment.schedule_date)
+        }
+        return Response(resp, 201)
+    
         
-                
         
-# class CreateAppointment(APIView):
-#     permission_classes = [IsPatient, ]
-#     def post(self, request, medic_id): 
-#         # CHECK MEDIC ID
-#         try:
-#             medic = PrimaryUser.objects.get(id=medic_id, is_medic=True)
-#         except PrimaryUser.DoesNotExist:
-#             return JsonResponse({'error': f'Medic with id {medic_id} does not exist or is not a medic.'}, status=400)
         
-#         schedule_date = request.POST.get('schedule_date')
-        
-#         appointment = Appointment(user=user, assigned_medic=medic, schedule_date=schedule_date)
-#         appointment.save()
-#         return JsonResponse({'success': f'Appointment created for {request.first_name} {request.last_name} with {medic.first_name} {medic.last_name}.'}, status=201)
+
     
         
         
