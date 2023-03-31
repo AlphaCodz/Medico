@@ -160,7 +160,7 @@ class MedStatus(APIView):
         else:
             resp = {
                 "code": 200,
-                "status": True
+                "status": False
             }
             return Response(resp, 200)   
         
