@@ -27,7 +27,7 @@ class PrimaryUser(AbstractBaseUser):
         super().save(*args, **kwargs)
         
 
-class MedicalData(models.Model):
+class MedicalData(models.Model): 
     RACE = (
         ("BLACK", "BLACK"),
         ("WHITE", "WHITE"),
@@ -62,6 +62,7 @@ class MedicalData(models.Model):
     occupation = models.CharField(choices=OCCUPATION, max_length=25)
     blood_group = models.CharField(choices=BLOOD_GROUP, max_length=4)
     medical_cases = models.TextField()
+    home_address = models.CharField(max_length=300, null=True)
     
     def __str__(self):
         return self.user.first_name

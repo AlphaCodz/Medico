@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import JsonResponse
 from helpers.views import BaseView
-from .models import PrimaryUser, Appointment
+from .models import PrimaryUser, Appointment, MedicalData
 from rest_framework.response import Response
 from rest_framework.decorators import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -99,6 +99,7 @@ class LogoutView(APIView):
         
         
 class AllDoctors(APIView):
+    permission_classes = [IsAuthenticated,]
     def get(self, request, *args, **kwargs):
         doctors = PrimaryUser.objects.filter(is_medic=True)
         doc_list = []
@@ -112,7 +113,38 @@ class AllDoctors(APIView):
             doc_list.append(resp)
             context_data = {"doctors":doc_list}
         return JsonResponse(context_data)
+    
+class AddMedData(APIView):
+    required_post_fields = ["race", "occupation", "blood_group", "medical_cases", "home_address"]
+    permission_classes = [IsPatient, ]
+    
+    def post(self, request, format=None):
+        # print(request.headers)
+        user = request.user
+        medical_data = MedicalData(user=user)
+        medical_data.race = request.data["race"]
+        medical_data.occupation = request.data["occupation"]
+        medical_data.blood_group = request.data["blood_group"]
+        medical_data.medical_cases = request.data["medical_cases"]
+        medical_data.home_address = request.data["home_address"]
+        medical_data.save()
+        resp = {
+            "code":200,
+            "messsage": "Medical Data Added Successfully",
+            "medical_data": {
+                "patient": Jsonify_user(user),
+                "race": medical_data.race,
+                "occupation": medical_data.occupation,
+                "blood_group": medical_data.blood_group,
+                "medical_cases": medical_data.medical_cases,
+                "home_address": medical_data.home_address
+            }
+        }
+        return Response(resp, 200)
         
+                
+        
+                
         
 # class CreateAppointment(APIView):
 #     permission_classes = [IsPatient, ]
