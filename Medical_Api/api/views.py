@@ -144,6 +144,25 @@ class AddMedData(BaseView):
             }
         }
         return Response(resp, 200)
+    
+    
+class MedStatus(APIView):
+    permission_classes = [IsAuthenticated,]
+    def get(self, request, *args, **kwargs):
+        user = request.user
+        status = MedicalData.objects.filter(user=user).first()
+        if status and status.is_submitted:
+            resp = {
+                "code": 200,
+                "status": True
+            }
+            return Response(resp, 200)
+        else:
+            resp = {
+                "code": 200,
+                "status": True
+            }
+            return Response(resp, 200)   
         
                 
         
