@@ -25,7 +25,7 @@ class PatientReg(BaseView):
         patient = PrimaryUser(email=request.data["email"])
         patient.first_name = request.data["first_name"]
         patient.last_name = request.data["last_name"]
-        patient.email = request.data["email"]
+        # patient.email = request.data["email"]
         patient.set_password(raw_password=request.data["password"])
         patient.is_patient = True
         patient.is_medic = False
