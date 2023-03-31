@@ -98,6 +98,22 @@ class LogoutView(APIView):
             return Response(status=status.HTTP_400_BAD_REQUEST)
         
         
+class AllDoctors(APIView):
+    def get(self, request, *args, **kwargs):
+        doctors = PrimaryUser.objects.filter(is_medic=True)
+        doc_list = []
+        
+        for doctor in doctors:
+            resp = {
+                "code": 200,
+                "message": "SuccessFul",
+                "doctors": Jsonify_user(doctor)
+            }
+            doc_list.append(resp)
+            context_data = {"doctors":doc_list}
+        return JsonResponse(context_data)
+        
+        
 # class CreateAppointment(APIView):
 #     permission_classes = [IsPatient, ]
 #     def post(self, request, medic_id): 

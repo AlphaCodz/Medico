@@ -26,6 +26,11 @@ class PrimaryUser(AbstractBaseUser):
             self.username = code
         super().save(*args, **kwargs)
         
+
+class MedicalData(models.Model):
+    pass
+
+        
         
     
     
