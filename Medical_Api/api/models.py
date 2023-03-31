@@ -63,6 +63,7 @@ class MedicalData(models.Model):
     blood_group = models.CharField(choices=BLOOD_GROUP, max_length=4)
     medical_cases = models.TextField()
     home_address = models.CharField(max_length=300, null=True)
+    is_submitted = models.BooleanField(default=False)
     
     def __str__(self):
         return self.user.first_name

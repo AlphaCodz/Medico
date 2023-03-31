@@ -114,10 +114,9 @@ class AllDoctors(APIView):
             context_data = {"doctors":doc_list}
         return JsonResponse(context_data)
     
-class AddMedData(APIView):
+class AddMedData(BaseView):
     required_post_fields = ["race", "occupation", "blood_group", "medical_cases", "home_address"]
     permission_classes = [IsPatient, ]
-    
     def post(self, request, format=None):
         # print(request.headers)
         user = request.user
@@ -127,6 +126,7 @@ class AddMedData(APIView):
         medical_data.blood_group = request.data["blood_group"]
         medical_data.medical_cases = request.data["medical_cases"]
         medical_data.home_address = request.data["home_address"]
+        medical_data.is_submitted=True
         medical_data.save()
         resp = {
             "code":200,
@@ -138,6 +138,9 @@ class AddMedData(APIView):
                 "blood_group": medical_data.blood_group,
                 "medical_cases": medical_data.medical_cases,
                 "home_address": medical_data.home_address
+            },
+            "medical status check": {
+                "has_submitted": medical_data.is_submitted
             }
         }
         return Response(resp, 200)
