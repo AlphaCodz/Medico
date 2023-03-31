@@ -164,7 +164,9 @@ class MedStatus(APIView):
             }
             return Response(resp, 200)   
         
-                
+            
+            
+            
         
                 
         
