@@ -31,7 +31,8 @@ class MedicalData(models.Model):
     RACE = (
         ("BLACK", "BLACK"),
         ("WHITE", "WHITE"),
-        ("COLORED", "COLORED")
+        ("COLORED", "COLORED"),
+        ("OTHER", "OTHER")
     )
     
     OCCUPATION = (
@@ -43,7 +44,8 @@ class MedicalData(models.Model):
         ("CONSTRUCTION WORKER", "CONSTRUCTION WORKER"),
         ("LABOURER", "LABOURER"),
         ("STUDENT/PUPIL", "STUDENT/PUPIL"),
-        ("GENERAL ASSISTANT", "GENERAL ASSISTANT")       
+        ("GENERAL ASSISTANT", "GENERAL ASSISTANT"),
+        ("OTHER", "OTHER")      
     )
     
     BLOOD_GROUP = (
