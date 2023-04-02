@@ -192,10 +192,28 @@ class CreateAppointment(APIView):
         return Response(resp, 201)
     
 class AppointmentList(APIView):
+    permission_classes = [IsPatient,]
     def get(self, request, format=None):
-      user = PrimaryUser.objects.filter(is_medic=True, is_patient=True).first()
-      appointment = Appointment.objects.filter()
-      all_appointments = []
+        user = request.user
+        appointments = Appointment.objects.filter(user=user)
+        li = []
+       
+        for appointment in appointments:
+           resp = {
+                "first name": appointment.user.first_name,
+                "last name": appointment.user.last_name,
+                "medical issue": appointment.medical_issue,
+                "referral letter": appointment.referral_letter if appointment.referral_letter else None,
+                "schedule date": appointment.schedule_date.date(),
+                "schedule time": appointment.schedule_date.time()
+                  }
+           li.append(resp)
+           app_data = {"appoinments":li}
+        return JsonResponse(app_data)
+       
+        
+
+          
       
       
 

@@ -79,7 +79,7 @@ class MedicalData(models.Model):
     
     
 class Appointment(models.Model):
-    user = models.ForeignKey(PrimaryUser, on_delete=models.PROTECT)
+    user = models.ForeignKey(PrimaryUser, on_delete=models.PROTECT, null=True)
     schedule_date = models.DateTimeField(null=True)
     referral_letter = models.FileField(upload_to="ref_letters/", null=True)
     medical_issue = models.TextField(null=True)
