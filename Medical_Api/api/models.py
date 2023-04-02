@@ -26,6 +26,8 @@ class PrimaryUser(AbstractBaseUser):
             self.username = code
         super().save(*args, **kwargs)
         
+    
+        
 
 class MedicalData(models.Model): 
     RACE = (
@@ -79,11 +81,16 @@ class MedicalData(models.Model):
 class Appointment(models.Model):
     user = models.ForeignKey(PrimaryUser, on_delete=models.PROTECT)
     schedule_date = models.DateTimeField(null=True)
-    # referral_letter = models.FileField()
+    referral_letter = models.FileField(upload_to="ref_letters/", null=True)
+    medical_issue = models.TextField(null=True)
     
     def __str__(self):
         return self.user.first_name
     
+    def get_user():
+        users = PrimaryUser.objects.filter(is_medic=True)
+        
+        
 # - Register for patients (post)
 # - Register for doctors (post)
 # - Login (post)

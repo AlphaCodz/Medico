@@ -178,16 +178,33 @@ class CreateAppointment(APIView):
         appointment = Appointment(user=this_user)
         schedule_date_str = request.data.get("schedule_date")
         appointment.schedule_date = timezone.make_aware(datetime.strptime(schedule_date_str, f'%Y-%m-%d %H:%M:%S'))
+        appointment.referral_letter = request.data.get("referral_letter")
+        appointment.medical_issue = request.data.get("medical_issue")
         appointment.save()
         resp = {
             "code":201,
             "user": Jsonify_user(this_user),
             "message": "Appointment Created Succesfully",
-            "appointment date": str(appointment.schedule_date)
+            "appointment date": str(appointment.schedule_date),
+            "refferal letter": str(appointment.referral_letter),
+            "medical issues": appointment.medical_issue
         }
         return Response(resp, 201)
     
+class AppointmentList(APIView):
+    def get(self, request, format=None):
+      user = PrimaryUser.objects.filter(is_medic=True, is_patient=True).first()
+      appointment = Appointment.objects.filter()
+      all_appointments = []
+      
+      
+
         
+        
+        
+        
+        
+       
         
         
 
