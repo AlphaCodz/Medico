@@ -29,8 +29,8 @@ class PatientReg(BaseView):
         patient.first_name = request.data["first_name"]
         patient.last_name = request.data["last_name"]
         patient.set_password(raw_password=request.data["password"])
-        patient.is_patient = True
-        patient.is_medic = False
+        patient.is_patient=True
+        patient.is_medic=False
         patient.save()
         
         resp = {
@@ -45,7 +45,7 @@ class DoctorReg(BaseView):
     def post(self, request, format=None):
         super().post(request, format)
         def post(self, request, format=None):
-            if Doctor.objects.filter(email=request.data.get("email")).exists():
+            if PrimaryUser.objects.filter(email=request.data.get("email")).exists():
                 resp = {
                     "code":400,
                     "message": "Sorry email is taken"
