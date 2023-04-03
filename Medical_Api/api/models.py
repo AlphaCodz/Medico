@@ -18,12 +18,8 @@ class PrimaryUser(AbstractBaseUser):
         return self.first_name
     
     def save(self, *args, **kwargs):
-        # Check if a user with the same username already exists
-        if PrimaryUser.objects.filter(username=self.username).exists():
-            raise ValueError('Username already exists')
-        else:
-            code = rand.randint(10000, 99999)
-            self.username = code
+        code = rand.randint(11000, 99999)
+        self.username = code
         super().save(*args, **kwargs)
             
         

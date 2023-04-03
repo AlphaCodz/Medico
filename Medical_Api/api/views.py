@@ -25,17 +25,19 @@ class PatientReg(BaseView):
                 "message": "Sorry email is taken"
             }
             return Response(resp, 400)
-        patient = PrimaryUser(email=request.data["email"])
-        patient.first_name = request.data["first_name"]
-        patient.last_name = request.data["last_name"]
+        patient = PrimaryUser.objects.create(
+            email = request.data["email"],
+            first_name=request.data["first_name"],
+            last_name=request.data["last_name"],
+            is_patient=True,
+            is_medic=False
+        )
         patient.set_password(raw_password=request.data["password"])
-        patient.is_patient=True
-        patient.is_medic=False
         patient.save()
-        
         resp = {
             "code":201,
-            "message":"Congratulations! Registered Successfully" 
+            "message":"Congratulations! Registered Successfully",
+            "status": patient.is_patient
                 }
         return Response(resp, 201)
         
