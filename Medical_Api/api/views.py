@@ -10,6 +10,9 @@ from .permissions import IsPatient
 from rest_framework.permissions import IsAuthenticated
 from datetime import datetime
 from django.utils import timezone
+from django.contrib.auth.hashers import make_password
+from django.db.models import Prefetch
+from django.db.models import Q
 
 # Create your views here.
 class PatientReg(BaseView):
@@ -42,7 +45,7 @@ class DoctorReg(BaseView):
     def post(self, request, format=None):
         super().post(request, format)
         def post(self, request, format=None):
-            if PrimaryUser.objects.filter(email=request.data["email"]).exists():
+            if Doctor.objects.filter(email=request.data.get("email")).exists():
                 resp = {
                     "code":400,
                     "message": "Sorry email is taken"
@@ -51,10 +54,9 @@ class DoctorReg(BaseView):
         doc = PrimaryUser(email=request.data["email"])
         doc.first_name = request.data["first_name"]
         doc.last_name = request.data["last_name"]
-        doc.email = request.data["email"]
         doc.set_password(raw_password=request.data["password"])
-        doc.is_patient = False
-        doc.is_medic = True
+        doc.is_medic=True
+        doc.is_patient=False
         doc.save()
         resp = {
             "code":201,
@@ -74,7 +76,7 @@ class Login(BaseView):
                 "code": 404,
                 "message": "Incorrect Email please try again!"
             }
-            return Response(resp)
+            return Response(resp, 404)
         if user.check_password(raw_password=request.data["password"]):
             token = RefreshToken.for_user(user)
             print(token)
@@ -85,6 +87,12 @@ class Login(BaseView):
                 "token": str(token.access_token)   
             }
             return Response(resp, 200)
+        resp = {
+            "code":401,
+            "message": "Incorrect Password"
+        }
+        return Response(resp, 401)
+       
 
 class LogoutView(APIView):
     permission_classes = (IsAuthenticated)
@@ -192,25 +200,40 @@ class CreateAppointment(APIView):
         return Response(resp, 201)
     
 class AppointmentList(APIView):
-    permission_classes = [IsPatient,]
+    permission_classes = [IsAuthenticated,]
+
     def get(self, request, format=None):
         user = request.user
         appointments = Appointment.objects.filter(user=user)
-        li = []
+        doctors = PrimaryUser.objects.filter(is_medic=True, appointment__in=appointments)
+        data_list = []
        
         for appointment in appointments:
-           resp = {
-                "first name": appointment.user.first_name,
-                "last name": appointment.user.last_name,
-                "medical issue": appointment.medical_issue,
-                "referral letter": appointment.referral_letter if appointment.referral_letter else None,
-                "schedule date": appointment.schedule_date.date(),
-                "schedule time": appointment.schedule_date.time()
-                  }
-           li.append(resp)
-           app_data = {"appoinments":li}
-        return JsonResponse(app_data)
-       
+            resp = {
+                "first_name": appointment.user.first_name,
+                "last_name": appointment.user.last_name,
+                "appointments": []
+            }
+            for appointment in appointments.filter(user=appointment.user):
+                res = {
+                    "schedule_date": appointment.schedule_date.date(),
+                    "schedule_time": appointment.schedule_date.time(),
+                }
+                for doctor in doctors:
+                    if appointment.user == doctor:
+                        doc_res = {
+                            "doctor": f"Dr. {doctor.first_name} {doctor.last_name}"
+                        }
+                        res.update(doc_res)
+                resp["appointments"].append(res)
+            data_list.append(resp)
+        return Response(data_list)   
+                        
+                    
+                       
+               
+           
+
         
 
           

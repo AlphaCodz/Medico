@@ -3,15 +3,15 @@ from django.contrib.auth.models import User, AbstractBaseUser
 import random as rand
 
 
+
 # Create your models here.
 class PrimaryUser(AbstractBaseUser):
     first_name = models.CharField(max_length=200, null=True)
     last_name = models.CharField(max_length=200, null=True)
     email = models.EmailField(unique=True, null=True)
-    is_patient = models.BooleanField(default=False, null=True)
-    is_medic = models.BooleanField(default=False, null=True)
     username = models.CharField(max_length=10, unique=True, null=True)
-    
+    is_patient = models.BooleanField(default=False)
+    is_medic = models.BooleanField(default=False)
     USERNAME_FIELD = "email"
     
     def __str__(self):
@@ -25,8 +25,7 @@ class PrimaryUser(AbstractBaseUser):
             code = rand.randint(10000, 99999)
             self.username = code
         super().save(*args, **kwargs)
-        
-    
+            
         
 
 class MedicalData(models.Model): 
