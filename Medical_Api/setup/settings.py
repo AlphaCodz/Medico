@@ -157,6 +157,12 @@ AUTH_USER_MODEL="api.PrimaryUser"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
+# CLOUDINARY CONFIG
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+
+CLOUDINARY_STORAGE={
+    "CLOUDINARY_URL":env("CLOUDINARY_URL")
+}
 
 CORS_ORIGIN_ALLOW_ALL=True
 
@@ -182,9 +188,3 @@ CORS_ALLOW_HEADERS = [
 ]
 
 
-# CLOUDINARY CONFIG
-DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
-
-CLOUDINARY_STORAGE = {
-    "CLOUDINARY_URL": env("CLOUDINARY_URL")
-}
