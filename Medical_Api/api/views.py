@@ -5,7 +5,7 @@ from .models import PrimaryUser, Appointment, MedicalData
 from rest_framework.response import Response
 from rest_framework.decorators import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
-from .helper import Jsonify_user
+from .helper import Jsonify_user, Jsonify_doc
 from .permissions import IsPatient
 from rest_framework.permissions import IsAuthenticated
 from datetime import datetime
@@ -43,7 +43,7 @@ class PatientReg(BaseView):
         
         
 class DoctorReg(BaseView):
-    required_post_fields = ["first_name", "last_name", "email", "password"]  
+    required_post_fields = ["first_name", "last_name", "specialty", "profile_image", "years_of_experience", "other", "email", "password"]  
     def post(self, request, format=None):
         super().post(request, format)
         def post(self, request, format=None):
@@ -56,13 +56,25 @@ class DoctorReg(BaseView):
         doc = PrimaryUser(email=request.data["email"])
         doc.first_name = request.data["first_name"]
         doc.last_name = request.data["last_name"]
+        doc.specialty = request.data["specialty"]
+        doc.years_of_experience = request.data["years_of_experience"]
+        doc.profile_image = request.data["profile_image"]
         doc.set_password(raw_password=request.data["password"])
         doc.is_medic=True
         doc.is_patient=False
+        
+        # Check if specialty is not among the listed field
+        if doc.specialty == "OTHER":
+            doc.other = request.data["other"]
+        else:
+            doc.other = None
         doc.save()
         resp = {
             "code":201,
-            "message":"Congratulations! Registered Successfully" 
+            "message":"Congratulations! Registered Successfully",
+            "Doctor": {
+                "data": Jsonify_doc(doc)
+            }
             }
         return Response(resp, 201)
     
@@ -121,7 +133,6 @@ class AllDoctors(APIView):
             "message": "SuccessFul",
             "doctors": doc_list
         }
-        
         return JsonResponse(context_data)
     
 class AddMedData(BaseView):

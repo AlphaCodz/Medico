@@ -50,6 +50,9 @@ INSTALLED_APPS = [
     
     "api",
     "rest_framework",
+    
+    # IMAGE & FILE STORAGE
+    "cloudinary_storage",
 ]
 
 MIDDLEWARE = [
@@ -177,3 +180,8 @@ CORS_ALLOW_HEADERS = [
     "x-requested-with",
 ]
 
+
+# CLOUDINARY CONFIG
+CLOUDINARY_STORAGE={
+    "CLOUDINARY_URL":env("CLOUDINARY_URL")
+}
