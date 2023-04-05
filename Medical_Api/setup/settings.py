@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 from pathlib import Path
 import environ, os
 from datetime import timedelta
+import cloudinary
 
 env = environ.Env()
 environ.Env.read_env()
@@ -182,6 +183,8 @@ CORS_ALLOW_HEADERS = [
 
 
 # CLOUDINARY CONFIG
-CLOUDINARY_STORAGE={
-    "CLOUDINARY_URL":env("CLOUDINARY_URL")
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+
+CLOUDINARY_STORAGE = {
+    "CLOUDINARY_URL": env("CLOUDINARY_URL")
 }
