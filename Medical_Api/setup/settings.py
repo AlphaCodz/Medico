@@ -21,7 +21,6 @@ environ.Env.read_env()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
-MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
 
 # RAILWAY STORAGE
@@ -148,7 +147,6 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
 STATIC_URL = "static/"
-MEDIA_URL="media/"
 AUTH_USER_MODEL="api.PrimaryUser"
 
 
@@ -158,11 +156,13 @@ AUTH_USER_MODEL="api.PrimaryUser"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # CLOUDINARY CONFIG
-DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+
 
 CLOUDINARY_STORAGE={
     "CLOUDINARY_URL":env("CLOUDINARY_URL")
 }
+
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
 CORS_ORIGIN_ALLOW_ALL=True
 
