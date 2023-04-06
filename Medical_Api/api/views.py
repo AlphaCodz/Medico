@@ -122,12 +122,11 @@ class LogoutView(APIView):
         
 class AllDoctors(APIView):
     permission_classes = [IsAuthenticated,]
-    
     def get(self, request, *args, **kwargs):
         doctors = PrimaryUser.objects.filter(is_medic=True)
         doc_list = []
         for doctor in doctors:
-            doc_list.append(Jsonify_user(doctor))
+            doc_list.append(Jsonify_doc(doctor))
         context_data = {
             "code": 200,
             "message": "SuccessFul",
