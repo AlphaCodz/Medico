@@ -2,7 +2,8 @@ from django.db import models
 from django.contrib.auth.models import User, AbstractBaseUser
 import random as rand
 from cloudinary_storage.storage import RawMediaCloudinaryStorage
-
+import os
+from django.conf import settings
 
 
 # Create your models here.
@@ -38,7 +39,8 @@ class PrimaryUser(AbstractBaseUser):
     
     def get_file_url(self):
         if self.profile_image:
-            return self.profile_image.storage.url(self.profile_image.name)
+            filename = os.path.basename(self.profile_image.name)
+            return f"{settings.CLOUDINARY_STORAGE['CLOUDINARY_URL']}/{filename}"
         else:
             return None
     
