@@ -4,6 +4,9 @@ import random as rand
 from cloudinary_storage.storage import RawMediaCloudinaryStorage
 import os
 from django.conf import settings
+import cloudinary, cloudinary.uploader
+from datetime import datetime
+import time
 
 
 # Create your models here.
@@ -39,8 +42,13 @@ class PrimaryUser(AbstractBaseUser):
     
     def get_file_url(self):
         if self.profile_image:
-            filename = os.path.basename(self.profile_image.name)
-            return f"{settings.CLOUDINARY_STORAGE['CLOUDINARY_URL']}/{filename}"
+            timestamp=str(int(time.time()))
+            url, options = cloudinary.utils.cloudinary_url(self.profile_image.name, 
+                                                           version=f"{timestamp}",
+                                                           raw_upload=True,
+                                                           resource_type="raw"
+                                                                    )
+            return url.replace('/raw/upload/', '/raw/upload/v').replace('vv', 'v')
         else:
             return None
     
