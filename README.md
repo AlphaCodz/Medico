@@ -1,5 +1,5 @@
 # Medico
-<strong>Medico</strong> is an API that you are building for a healthcare application. The purpose of the API is to provide a way for users of the healthcare application to access and manage their healthcare-related data, such as medical records, appointments, prescriptions, and test results, among other things.
+<strong>Medico</strong> is an API for a healthcare application. The purpose of the API is to provide a way for users of the healthcare application to access and manage their healthcare-related data, such as medical records, appointments, prescriptions, and test results, among other things.
 
 Some of the endpoints that the Medico API could have might include:
 <ol>
