@@ -77,6 +77,17 @@ class DoctorReg(BaseView):
             }
             }
         return Response(resp, 201)
+
+class AllUsers(BaseView):
+    def get(self, request, format=None):
+        users = PrimaryUser.objects.filter(is_patient=True)
+        for user in users:
+            resp = {
+                "code": 200,
+                "patients": Jsonify_user(user)
+            }
+            return Response(resp, 200)
+        
     
 class AdminReg(BaseView):
     required_post_fields = ["first_name", "last_name", "email", "staff_number","password"]

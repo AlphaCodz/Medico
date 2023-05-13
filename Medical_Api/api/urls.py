@@ -2,12 +2,13 @@ from django.urls import path
 from .views import (PatientReg, DoctorReg, 
                     Login, LogoutView, AllDoctors,
                     AddMedData, MedStatus, CreateAppointment, AppointmentList, AdminReg
-                    , AdminData)
+                    , AdminData, AllUsers)
 
 from . import views
 
 urlpatterns = [
     path("patient/reg/", PatientReg.as_view(), name="patient-reg"),
+    path("all/users", AllUsers.as_view(), name="all-users"),
     path("doctor/reg/", DoctorReg.as_view(), name="doctor-reg"),
     path("login", Login.as_view(), name="login"),
     path("logout", LogoutView.as_view(), name="logout"),
