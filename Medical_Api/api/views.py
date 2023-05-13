@@ -13,7 +13,7 @@ from django.utils import timezone
 from django.contrib.auth.hashers import make_password
 from django.db.models import Prefetch
 from django.db.models import Q
-
+from rest_framework import permissions
 # Create your views here.
 class PatientReg(BaseView):
     required_post_fields = ["first_name", "last_name", "email", "password"]
@@ -111,6 +111,18 @@ class AdminReg(BaseView):
             "data":Jsonify_user(admin) 
         }
         return Response(data, 201)
+    
+class AdminData(BaseView):
+    permission_classes = [permissions.IsAuthenticated]
+    def get(self, request, format=None):
+        admin_data = Jsonify_user(request.user)
+        res = {
+            "code": 200,
+            "message": "success",
+            "admin": admin_data
+        }
+        return Response(res)
+        
         
 class Login(BaseView):
     required_post_fields = ["email", "password"]

@@ -1,7 +1,10 @@
 from django.urls import path
 from .views import (PatientReg, DoctorReg, 
                     Login, LogoutView, AllDoctors,
-                    AddMedData, MedStatus, CreateAppointment, AppointmentList, AdminReg)
+                    AddMedData, MedStatus, CreateAppointment, AppointmentList, AdminReg
+                    , AdminData)
+
+from . import views
 
 urlpatterns = [
     path("patient/reg/", PatientReg.as_view(), name="patient-reg"),
@@ -13,5 +16,6 @@ urlpatterns = [
     path("get/status", MedStatus.as_view(), name="get_status"),
     path("create/appointment/<int:medic_id>", CreateAppointment.as_view(), name="appointment"),
     path("get/appointments/", AppointmentList.as_view(), name="appointment-list"),
-    path("reg/admin/", AdminReg.as_view(), name="admin")
+    path("reg/admin/", AdminReg.as_view(), name="admin"),
+    path("admin/data/", AdminData.as_view(), name="admin-data")
 ]
