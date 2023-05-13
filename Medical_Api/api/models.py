@@ -35,6 +35,8 @@ class PrimaryUser(AbstractBaseUser):
     is_patient = models.BooleanField(default=False)
     profile_image = models.FileField(storage=RawMediaCloudinaryStorage(), null=True)
     is_medic = models.BooleanField(default=False)
+    is_admin = models.BooleanField(default=False)
+    staff_number = models.CharField(max_length=50, null=True)
     USERNAME_FIELD = "email"
     
     def __str__(self):

@@ -78,6 +78,40 @@ class DoctorReg(BaseView):
             }
         return Response(resp, 201)
     
+class AdminReg(BaseView):
+    required_post_fields = ["first_name", "last_name", "email", "staff_number","password"]
+    def post(self, request):
+        data = request.data
+        if PrimaryUser.objects.filter(email=data["email"]).exists():
+            resp = {
+                "code":400,
+                "message": "Sorry Email is Taken"
+            }
+            return Response(resp, 400)
+        if PrimaryUser.objects.filter(staff_number=data["staff_number"]).exists():
+            resp = {
+                "code":400,
+                "message": "Sorry Staffs can't have double accounts"
+            }
+            return Response(resp,400)
+        
+        admin = PrimaryUser.objects.create(
+            first_name=data["first_name"],
+            last_name=data["last_name"],
+            email=data["email"],
+            staff_number=data["staff_number"],
+        )
+        admin.set_password(raw_password=data["password"])
+        admin.is_admin=True
+        admin.is_medic=False
+        admin.is_patient=True
+        admin.save()
+        data = {
+            "code": 201,
+            "data":Jsonify_user(admin) 
+        }
+        return Response(data, 201)
+        
 class Login(BaseView):
     required_post_fields = ["email", "password"]
     def post(self, request, format=None):

@@ -7,7 +7,8 @@ def Jsonify_user(user:PrimaryUser):
         "email":user.email,
         "username":user.username,
         "is_patient": user.is_patient,
-        "is_medic": user.is_medic
+        "is_medic": user.is_medic,
+        "is_admin": user.is_admin
     }
 def Jsonify_doc(doc:PrimaryUser):
     return  {
@@ -22,3 +23,4 @@ def Jsonify_doc(doc:PrimaryUser):
         "is_patient": doc.is_patient,
         "is_medic": doc.is_medic
     }
+
