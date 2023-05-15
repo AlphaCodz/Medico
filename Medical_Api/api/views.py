@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import JsonResponse
 from helpers.views import BaseView
-from .models import PrimaryUser, Appointment, MedicalData
+from .models import PrimaryUser, Appointment, MedicalData, Document
 from rest_framework.response import Response
 from rest_framework.decorators import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -359,6 +359,24 @@ class Assigned(BaseView):
                 "message": "No Patients Yet"
             }
             return Response(resp, status=404)
+        
+
+class CreateDocument(BaseView):
+    permission_classes = [IsAuthenticated,]
+    required_post_fields = ["title", "description", "file"]
+    def post(self, request, format=None):
+        document = Document.objects.create(
+            user=request.user,
+            title=request.data["title"],
+            description=request.data["description"],
+            file=request.data["file"]
+        )
+        document.save()
+        resp = {
+            "code": 201,
+            "message": "Documents Created Successfully"
+        }
+        return Response(resp, 201)
       
       
 

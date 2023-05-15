@@ -123,3 +123,24 @@ class Appointment(models.Model):
 # - Login (post)
 # - get lost of doctors (Get)
 # - to submit appointment form (post)
+
+class Document(models.Model):
+    user = models.ForeignKey(PrimaryUser, on_delete=models.CASCADE, null=True)
+    title = models.CharField(max_length=200)
+    description = models.TextField()
+    file = models.FileField(storage=RawMediaCloudinaryStorage(), null=True)
+    
+    def __str__(self):
+        return self.title
+    
+    def get_file_url(self):
+        if self.profile_image:
+            timestamp=str(int(time.time()))
+            url, options = cloudinary.utils.cloudinary_url(self.profile_image.name, 
+                                                           version=f"{timestamp}",
+                                                           raw_upload=True,
+                                                           resource_type="raw"
+                                                                    )
+            return url.replace('/raw/upload/', '/raw/upload/v').replace('vv', 'v')
+        else:
+            return None
