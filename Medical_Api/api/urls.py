@@ -19,5 +19,6 @@ urlpatterns = [
     path("get/appointments/", AppointmentList.as_view(), name="appointment-list"),
     path("reg/admin/", AdminReg.as_view(), name="admin"),
     path("admin/data/", AdminData.as_view(), name="admin-data"),
-    path("my/appointments/", GetMyAppointment.as_view(), name="get_my_appointments")
+    path("my/appointments/", GetMyAppointment.as_view(), name="get_my_appointments"),
+    path("assigned/patients", views.assigned_patients, name="assigned" )
 ]

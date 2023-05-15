@@ -342,13 +342,23 @@ class GetMyAppointment(BaseView):
             }
             return Response(resp, 404)
                     
-                       
-               
-           
 
-        
 
-          
+def assigned_patients(request):
+    assigned_appointments = Appointment.objects.filter(medic__isnull=False)
+    if assigned_appointments:
+        assigned_patients = [{"id": appointment.user.id, "first_name": appointment.user.first_name, "last_name": appointment.user.last_name} for appointment in assigned_appointments]
+        resp = {
+            "code": 200,
+            "data": assigned_patients
+        }
+        return Response(resp, 200)
+    else:
+        resp = {
+            "code":404,
+            "message": "No Patients Yet"
+        }
+        return Response(resp, 404)
       
       
 
