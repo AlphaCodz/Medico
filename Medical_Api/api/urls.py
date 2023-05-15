@@ -2,7 +2,7 @@ from django.urls import path
 from .views import (PatientReg, DoctorReg, 
                     Login, LogoutView, AllDoctors,
                     AddMedData, MedStatus, CreateAppointment, AppointmentList, AdminReg
-                    , AdminData, AllUsers, GetMyAppointment)
+                    , AdminData, AllUsers, GetMyAppointment, Assigned)
 
 from . import views
 
@@ -20,5 +20,5 @@ urlpatterns = [
     path("reg/admin/", AdminReg.as_view(), name="admin"),
     path("admin/data/", AdminData.as_view(), name="admin-data"),
     path("my/appointments/", GetMyAppointment.as_view(), name="get_my_appointments"),
-    path("assigned/patients", views.assigned_patients, name="assigned" )
+    path("assigned/patients", Assigned.as_view(), name="assigned" )
 ]
