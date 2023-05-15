@@ -246,38 +246,55 @@ class MedStatus(APIView):
         
             
 class CreateAppointment(APIView):
-    permission_classes = [IsPatient,]
-    def post(self, request, medic_id): 
+    permission_classes = [IsPatient]
+
+    def post(self, request):
         this_user = request.user
         medic = PrimaryUser.objects.filter(is_medic=True).first()
-        medic_id = Appointment.objects.filter(medic=medic.id, user=this_user).first()
+        medic_id = medic.id if medic else None
+
         # Get User
         if not this_user:
-            return {
+            return Response({
                 "code": 404,
                 "message": "User Not Found"
-            }
+            }, status=404)
+
         appointment = Appointment(user=this_user)
+
         schedule_date_str = request.data.get("schedule_date")
-        appointment.schedule_date = timezone.make_aware(datetime.strptime(schedule_date_str, f'%Y-%m-%d %H:%M:%S'))
+        if schedule_date_str:
+            try:
+                appointment.schedule_date = timezone.make_aware(datetime.strptime(schedule_date_str, '%Y-%m-%d %H:%M:%S'))
+            except ValueError:
+                return Response({
+                    "code": 400,
+                    "message": "Invalid schedule date format, should be: 'YYYY-MM-DD HH:MM:SS'"
+                }, status=400)
+
         appointment.referral_letter = request.data.get("referral_letter")
         appointment.medical_issue = request.data.get("medical_issue")
-        appointment.medic = request.data.get(medic_id)
+
+        if medic_id:
+            appointment.medic_id = medic_id
+
         appointment.save()
+
         resp = {
-            "code":201,
+            "code": 201,
             "user": Jsonify_user(this_user),
-            "message": "Appointment Created Succesfully",
-            "appointment date": str(appointment.schedule_date),
-            "refferal letter": str(appointment.referral_letter),
-            "medical issues": appointment.medical_issue,
-            "assigned_to": f"{appointment.medic}"
+            "message": "Appointment Created Successfully",
+            "appointment_date": str(appointment.schedule_date),
+            "referral_letter": str(appointment.referral_letter),
+            "medical_issues": appointment.medical_issue,
+            "assigned_to": f"{appointment.medic.first_name} {appointment.medic.last_name}" if appointment.medic else None
         }
-        return Response(resp, 201)
+
+        return Response(resp, status=201)
+
     
 class AppointmentList(APIView):
     permission_classes = [IsAuthenticated,]
-
     def get(self, request, format=None):
         user = request.user
         appointments = Appointment.objects.filter(user=user)
