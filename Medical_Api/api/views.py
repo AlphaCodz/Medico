@@ -88,6 +88,9 @@ class AllUsers(BaseView):
             }
             return Response(resp, 200)
         
+class GetMyAppointment:
+    def get(self, request, format=None):
+        pass
     
 class AdminReg(BaseView):
     required_post_fields = ["first_name", "last_name", "email", "staff_number","password"]
@@ -246,6 +249,8 @@ class CreateAppointment(APIView):
     permission_classes = [IsPatient,]
     def post(self, request, medic_id): 
         this_user = request.user
+        medic = PrimaryUser.objects.filter(is_medic=True).first()
+        medic_id = Appointment.objects.filter(medic=medic.id, user=this_user).first()
         # Get User
         if not this_user:
             return {
@@ -257,6 +262,7 @@ class CreateAppointment(APIView):
         appointment.schedule_date = timezone.make_aware(datetime.strptime(schedule_date_str, f'%Y-%m-%d %H:%M:%S'))
         appointment.referral_letter = request.data.get("referral_letter")
         appointment.medical_issue = request.data.get("medical_issue")
+        appointment.medic = request.data.get(medic_id)
         appointment.save()
         resp = {
             "code":201,
@@ -264,7 +270,8 @@ class CreateAppointment(APIView):
             "message": "Appointment Created Succesfully",
             "appointment date": str(appointment.schedule_date),
             "refferal letter": str(appointment.referral_letter),
-            "medical issues": appointment.medical_issue
+            "medical issues": appointment.medical_issue,
+            "assigned_to": f"{appointment.medic}"
         }
         return Response(resp, 201)
     

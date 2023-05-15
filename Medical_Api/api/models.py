@@ -102,16 +102,11 @@ class MedicalData(models.Model):
     is_submitted = models.BooleanField(default=False)
     
     def __str__(self):
-        return self.user.first_name
-    
-    
-
-        
-        
-    
+        return self.user.first_name  
     
 class Appointment(models.Model):
-    user = models.ForeignKey(PrimaryUser, on_delete=models.PROTECT, null=True)
+    user = models.ForeignKey(PrimaryUser, on_delete=models.CASCADE, null=True)
+    medic =  models.ForeignKey(PrimaryUser, on_delete=models.CASCADE, null=True, related_name="medical_appointments", limit_choices_to={"is_medic":True})
     schedule_date = models.DateTimeField(null=True)
     referral_letter = models.FileField(upload_to="ref_letters/", null=True)
     medical_issue = models.TextField(null=True)
