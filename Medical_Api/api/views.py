@@ -6,7 +6,7 @@ from rest_framework.response import Response
 from rest_framework.decorators import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
 from .helper import Jsonify_user, Jsonify_doc
-from .permissions import IsPatient
+from .permissions import IsPatient,IsMedic
 from rest_framework.permissions import IsAuthenticated
 from datetime import datetime
 from django.utils import timezone
@@ -248,9 +248,9 @@ class MedStatus(APIView):
 class CreateAppointment(APIView):
     permission_classes = [IsPatient]
 
-    def post(self, request):
+    def post(self, request, medic_id):
         this_user = request.user
-        medic = PrimaryUser.objects.filter(is_medic=True).first()
+        medic = PrimaryUser.objects.filter(is_medic=True, id=medic_id).first()
         medic_id = medic.id if medic else None
 
         # Get User
@@ -322,6 +322,25 @@ class AppointmentList(APIView):
             data_list.append(resp)
         return Response(data_list)   
                         
+class GetMyAppointment(BaseView):
+    permission_classes = [IsMedic,]
+    def get(self, request, format=None):
+        user_id = request.user.id
+        appointments = Appointment.objects.filter(medic=user_id)
+        if appointments:
+            data = [{"id":appointment.id, "first_name":appointment.user.first_name, "last_name": appointment.user.last_name, 
+              "medical_case": appointment.medical_issue} for appointment in appointments]
+            resp = {
+                "code": 200,
+                "data": data
+            }
+            return Response(resp, 200)
+        else:
+            resp = {
+                "code": 404,
+                "message": "You don't have an appointment yet"
+            }
+            return Response(resp, 404)
                     
                        
                
