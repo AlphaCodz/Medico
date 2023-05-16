@@ -81,12 +81,11 @@ class DoctorReg(BaseView):
 class AllUsers(BaseView):
     def get(self, request, format=None):
         users = PrimaryUser.objects.filter(is_patient=True)
-        for user in users:
-            resp = {
-                "code": 200,
-                "patients": Jsonify_user(user)
-            }
-            return Response(resp, 200)
+        resp = {
+            "code": 200,
+            "patients": [Jsonify_user(user) for user in users]
+        }
+        return Response(resp, 200)
         
 class GetMyAppointment:
     def get(self, request, format=None):
