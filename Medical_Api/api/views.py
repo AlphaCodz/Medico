@@ -86,11 +86,6 @@ class AllUsers(BaseView):
             "patients": [Jsonify_user(user) for user in users]
         }
         return Response(resp, 200)
-        
-class GetMyAppointment:
-    def get(self, request, format=None):
-        pass
-    
 class AdminReg(BaseView):
     required_post_fields = ["first_name", "last_name", "email", "staff_number","password"]
     def post(self, request):
@@ -326,20 +321,14 @@ class GetMyAppointment(BaseView):
     def get(self, request, format=None):
         user_id = request.user.id
         appointments = Appointment.objects.filter(medic=user_id)
-        if appointments:
-            data = [{"id":appointment.id, "first_name":appointment.user.first_name, "last_name": appointment.user.last_name, 
-              "medical_case": appointment.medical_issue} for appointment in appointments]
-            resp = {
-                "code": 200,
-                "data": data
-            }
-            return Response(resp, 200)
-        else:
-            resp = {
-                "code": 404,
-                "message": "You don't have an appointment yet"
-            }
-            return Response(resp, 404)
+        data = [{"id":appointment.id, "first_name":appointment.user.first_name, "last_name": appointment.user.last_name, 
+            "medical_case": appointment.medical_issue} for appointment in appointments]
+        resp = {
+            "code": 200,
+            "data": data
+        }
+        return Response(resp, 200)
+    
                     
 
 class Assigned(BaseView):
