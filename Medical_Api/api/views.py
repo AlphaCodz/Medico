@@ -14,6 +14,7 @@ from django.contrib.auth.hashers import make_password
 from django.db.models import Prefetch
 from django.db.models import Q
 from rest_framework import permissions
+from django.core.paginator import Paginator
 # Create your views here.
 class PatientReg(BaseView):
     required_post_fields = ["first_name", "last_name", "email", "password"]
@@ -175,13 +176,22 @@ class LogoutView(APIView):
 class AllDoctors(APIView):
     permission_classes = [IsAuthenticated,]
     def get(self, request, *args, **kwargs):
-        doctors = PrimaryUser.objects.filter(is_medic=True)
+        # PAGINATE
+        doctors = PrimaryUser.objects.filter(is_medic=True).order_by("id")
+        paginator = Paginator(doctors, 7)
+        page_number = request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
+        
         doc_list = []
-        for doctor in doctors:
+        for doctor in page_obj:
             doc_list.append(Jsonify_doc(doctor))
         context_data = {
             "code": 200,
             "message": "SuccessFul",
+            "current_page": page_obj.number,
+            "total_pages": paginator.num_pages,
+            "has_previous": page_obj.has_previous(),
+            "has_next": page_obj.has_next(),
             "doctors": doc_list
         }
         return JsonResponse(context_data)
@@ -324,7 +334,8 @@ class GetMyAppointment(BaseView):
         # current_time = timezone.now()
         appointments = Appointment.objects.filter(medic=user_id)
         data = [{"id":appointment.id, "first_name":appointment.user.first_name, "last_name": appointment.user.last_name, 
-            "medical_case": appointment.medical_issue, "schedule_date": str(appointment.schedule_date.date()), "schedule_time": str(appointment.schedule_date.time())} for appointment in appointments]
+            "medical_case": appointment.medical_issue, "schedule_date": str(appointment.schedule_date.date()), 
+            "schedule_time": str(appointment.schedule_date.time())} for appointment in appointments]
         resp = {
             "code": 200,
             "data": data
