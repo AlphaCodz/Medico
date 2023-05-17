@@ -178,20 +178,16 @@ class AllDoctors(APIView):
     def get(self, request, *args, **kwargs):
         # PAGINATE
         doctors = PrimaryUser.objects.filter(is_medic=True).order_by("id")
-        paginator = Paginator(doctors, 7)
-        page_number = request.GET.get('page')
-        page_obj = paginator.get_page(page_number)
+        # paginator = Paginator(doctors, 7)
+        # page_number = request.GET.get('page')
+        # page_obj = paginator.get_page(page_number)
         
         doc_list = []
-        for doctor in page_obj:
+        for doctor in doctors:
             doc_list.append(Jsonify_doc(doctor))
         context_data = {
             "code": 200,
             "message": "SuccessFul",
-            "current_page": page_obj.number,
-            "total_pages": paginator.num_pages,
-            "has_previous": page_obj.has_previous(),
-            "has_next": page_obj.has_next(),
             "doctors": doc_list
         }
         return JsonResponse(context_data)
