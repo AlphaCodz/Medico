@@ -130,8 +130,6 @@ class AdminData(BaseView):
             "admin": admin_data
         }
         return Response(res)
-        
-        
 class Login(BaseView):
     required_post_fields = ["email", "password"]
     def post(self, request, format=None):
@@ -271,9 +269,8 @@ class CreateAppointment(APIView):
 
         if medic_id:
             appointment.medic_id = medic_id
-
+            
         appointment.save()
-
         resp = {
             "code": 201,
             "user": Jsonify_user(this_user),
@@ -315,11 +312,16 @@ class AppointmentList(APIView):
                 resp["appointments"].append(res)
             data_list.append(resp)
         return Response(data_list)   
+    
+    from django.utils import timezone
+
+
                         
 class GetMyAppointment(BaseView):
     permission_classes = [IsMedic,]
     def get(self, request, format=None):
         user_id = request.user.id
+        # current_time = timezone.now()
         appointments = Appointment.objects.filter(medic=user_id)
         data = [{"id":appointment.id, "first_name":appointment.user.first_name, "last_name": appointment.user.last_name, 
             "medical_case": appointment.medical_issue} for appointment in appointments]
