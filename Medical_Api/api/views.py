@@ -324,14 +324,12 @@ class GetMyAppointment(BaseView):
         # current_time = timezone.now()
         appointments = Appointment.objects.filter(medic=user_id)
         data = [{"id":appointment.id, "first_name":appointment.user.first_name, "last_name": appointment.user.last_name, 
-            "medical_case": appointment.medical_issue} for appointment in appointments]
+            "medical_case": appointment.medical_issue, "schedule_date": str(appointment.schedule_date.date()), "schedule_time": str(appointment.schedule_date.time())} for appointment in appointments]
         resp = {
             "code": 200,
             "data": data
         }
         return Response(resp, 200)
-    
-                    
 
 class Assigned(BaseView):
     def get(request, format=None):
