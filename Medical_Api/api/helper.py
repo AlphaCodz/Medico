@@ -12,6 +12,7 @@ def Jsonify_user(user:PrimaryUser):
     }
 def Jsonify_doc(doc:PrimaryUser):
     return  {
+        "id": doc.id,
         "first_name":doc.first_name,
         "last_name":doc.last_name,
         "email":doc.email,

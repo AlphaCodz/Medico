@@ -240,7 +240,7 @@ class MedStatus(APIView):
         
             
 class CreateAppointment(APIView):
-    permission_classes = [IsPatient]
+    permission_classes = [IsPatient,]
 
     def post(self, request, medic_id):
         this_user = request.user
