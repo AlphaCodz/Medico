@@ -452,12 +452,38 @@ class GenerateHospitalCard(BaseView):
         }
         return Response(resp, 201)
     
+class MyCard(APIView):
+    permission_classes = [IsPatient,]
+    def get(self, request, format=None):
+        patient = request.user.id
+        try:
+            card = CardGenerator.objects.get(patient=patient)
+        except CardGenerator.DoesNotExist:
+            resp = {
+                "code": 404,
+                "message": "Patient Does Not Exist"
+            }
+        try:
+            medical_data = MedicalData.objects.get(user=patient)
+        except MedicalData.DoesNotExist:
+            resp = {
+                "code": 404,
+                "message": "Patient Record Doesn't Exist"
+            }
+        
+        data = {
+            "code":200,
+            "first_name": card.patient.first_name,
+            "last_name": card.patient.last_name,
+            "medical_record": {
+                "blood_group": card.medical_record.blood_group,
+                "medical_cases": card.medical_record.medical_cases,
+                "hospital_branch": card.hospital_branch
+            }
+        }
+        return Response(data, 200)
         
         
-        
-        
-        
-       
         
         
 

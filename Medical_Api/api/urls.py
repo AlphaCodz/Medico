@@ -3,7 +3,7 @@ from .views import (PatientReg, DoctorReg,
                     Login, LogoutView, AllDoctors,
                     AddMedData, MedStatus, CreateAppointment, AppointmentList, AdminReg
                     , AdminData, AllUsers, GetMyAppointment, Assigned,
-                    CreateDocument, CreateDiagForm, MyDiag, GenerateHospitalCard)
+                    CreateDocument, CreateDiagForm, MyDiag, GenerateHospitalCard, MyCard)
 
 from . import views
 
@@ -25,5 +25,6 @@ urlpatterns = [
     path("add/docs", CreateDocument.as_view(), name="create-doc"),
     path("create/diag/<int:patient_id>", CreateDiagForm.as_view(), name="create-diag"),
     path("my/diag", MyDiag.as_view(), name="my-diagnosis"),
-    path("create/card/<int:patient_id>", GenerateHospitalCard.as_view(), name="hospital-card")
+    path("create/card/<int:patient_id>", GenerateHospitalCard.as_view(), name="hospital-card"),
+    path("my/card", MyCard.as_view(), name="my-card")
 ]
