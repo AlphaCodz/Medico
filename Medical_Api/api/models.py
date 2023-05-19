@@ -157,7 +157,7 @@ class DiagnosisForm(models.Model):
     
 class CardGenerator(models.Model):
     patient = models.ForeignKey(PrimaryUser, on_delete=models.CASCADE, limit_choices_to={"is_patient":True})
-    medical_record = models.CharField(max_length=20)
+    medical_record = models.ForeignKey(MedicalData, on_delete=models.CASCADE, null=True)
     hospital_branch = models.CharField(max_length=100)
    
     def __str__(self):

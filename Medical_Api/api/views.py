@@ -411,6 +411,48 @@ class MyDiag(APIView):
             "data": data
         }
         return Response(resp, 200)
+    
+class GenerateHospitalCard(BaseView):
+    required_post_fields = ["patient", "medical_record", "hospital_branch"]
+    def post(self, request, patient_id):
+        try:
+            patient = PrimaryUser.objects.get(id=patient_id)
+        except PrimaryUser.DoesNotExist:
+            resp = {
+                "code": 404,
+                "message": "User Does Not Exist"
+            }
+            return Response(resp, 404)
+        
+        try:
+            medical_record = MedicalData.objects.get(user=patient_id)
+        except MedicalData.DoesNotExist:
+            resp = {
+                "code": 404,
+                "message": "Medical Data Does Not Exist"
+            }
+            return Response(resp, 404)
+        
+        card = CardGenerator.objects.create(
+            patient=patient,
+            medical_record=medical_record,
+            hospital_branch=request.POST["hospital_branch"]
+        )
+        card.save()
+        resp = {
+            "code": 201,
+            "message": "Created Successfully",
+            "data": {
+                "first_name": patient.first_name,
+                "last_name": patient.last_name,
+                "blood_group": card.medical_record.blood_group,
+                "medical_cases": card.medical_record.medical_cases,
+                "hospital_branch": card.hospital_branch
+            }
+        }
+        return Response(resp, 201)
+    
+        
         
         
         
