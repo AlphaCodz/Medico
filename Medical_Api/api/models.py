@@ -144,3 +144,22 @@ class Document(models.Model):
             return url.replace('/raw/upload/', '/raw/upload/v').replace('vv', 'v')
         else:
             return None
+        
+class DiagnosisForm(models.Model):
+    patient = models.ForeignKey(PrimaryUser, on_delete=models.CASCADE, limit_choices_to={"is_patient":True})
+    diagnosis = models.TextField()
+    submitted_at = models.DateTimeField(auto_now_add=True)
+    prescription = models.TextField()
+    additional_notes = models.TextField()
+    
+    def __str__(self):
+        return self.patient.first_name
+    
+class CardGenerator(models.Model):
+    patient = models.ForeignKey(PrimaryUser, on_delete=models.CASCADE, limit_choices_to={"is_patient":True})
+    medical_record = models.CharField(max_length=20)
+    hospital_branch = models.CharField(max_length=100)
+   
+    def __str__(self):
+        return self.patient.last_name
+    

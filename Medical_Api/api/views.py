@@ -15,6 +15,7 @@ from django.db.models import Prefetch
 from django.db.models import Q
 from rest_framework import permissions
 from django.core.paginator import Paginator
+from .models import DiagnosisForm, CardGenerator
 # Create your views here.
 class PatientReg(BaseView):
     required_post_fields = ["first_name", "last_name", "email", "password"]
@@ -367,8 +368,49 @@ class CreateDocument(BaseView):
         return Response(resp, 201)
       
       
-
-        
+class CreateDiagForm(BaseView):
+    required_post_fields=["patient", "diagnosis", "submitted_at", "prescription", "additional_notes"]
+    def post(self, request, patient_id):
+        try:
+            patient = PrimaryUser.objects.get(id=patient_id)
+        except PrimaryUser.DoesNotExist:
+            resp = {
+                "code": 404,
+                "message": "Patient Not Found"
+            }
+            return Response(resp, 404)
+        diagnosis = DiagnosisForm(
+            patient=patient,
+            diagnosis=request.POST["diagnosis"],
+            prescription=request.POST["prescription"],
+            additional_notes= request.POST["additional_notes"]
+            
+        )
+        diagnosis.save()
+        resp = {
+            "code":201,
+            "message": "Successful"
+        }
+        return Response(resp, 201)
+    
+class MyDiag(APIView):
+    def get(self, request, format=None):
+        user=request.user.id
+        try:
+            diags = DiagnosisForm.objects.filter(patient=user)
+        except DiagnosisForm.DoesNotExist:
+            return Response({
+                "code": 404,
+                "message": "No Diagnosis Yet"
+            }, 404)
+        data = [{"diagnosis": diag.diagnosis, "date_submitted": diag.submitted_at.date(), "time_submitted":diag.submitted_at.time(), 
+                 "prescription": diag.prescription, "additional_notes":diag.additional_notes} 
+                    for diag in diags]
+        resp = {
+            "code": 200,
+            "data": data
+        }
+        return Response(resp, 200)
         
         
         
