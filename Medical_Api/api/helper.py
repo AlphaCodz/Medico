@@ -7,6 +7,7 @@ def Jsonify_user(user:PrimaryUser):
         "last_name":user.last_name,
         "email":user.email,
         "username":user.username,
+        # "created_at": user.created_at,
         "is_patient": user.is_patient,
         "is_medic": user.is_medic,
         "is_admin": user.is_admin
