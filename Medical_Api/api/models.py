@@ -24,7 +24,6 @@ class PrimaryUser(AbstractBaseUser):
         ("OTHER", "OTHER")
     )
     
-    
     first_name = models.CharField(max_length=200, null=True)
     last_name = models.CharField(max_length=200, null=True)
     email = models.EmailField(unique=True, null=True)
@@ -37,6 +36,7 @@ class PrimaryUser(AbstractBaseUser):
     is_medic = models.BooleanField(default=False)
     is_admin = models.BooleanField(default=False)
     staff_number = models.CharField(max_length=50, null=True)
+    created_at = models.DateTimeField(auto_now_add=True, null=True)
     USERNAME_FIELD = "email"
     
     def __str__(self):
