@@ -8,7 +8,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from .helper import Jsonify_user, Jsonify_doc
 from .permissions import IsPatient,IsMedic
 from rest_framework.permissions import IsAuthenticated
-from datetime import datetime
+from datetime import datetime, timedelta
 from django.utils import timezone
 from django.contrib.auth.hashers import make_password
 from django.db.models import Prefetch
@@ -122,6 +122,28 @@ class AdminReg(BaseView):
         }
         return Response(data, 201)
     
+
+class Notification(APIView):
+    def get(self, request, format=None):
+        user = request.user
+        two_hrs_ago = datetime.now() - timedelta(hours=2)
+        
+        # Get New Users
+        new_users = PrimaryUser.objects.filter(is_patient=True, created_at__gte=two_hrs_ago)
+        
+        # Get New Doctors
+        new_docs = PrimaryUser.objects.filter(is_medic=True, created_at__gte=two_hrs_ago)
+        
+        user_data = [{"first_name": new_user.first_name, "last_name": new_user.last_name} for new_user in new_users]
+        
+        doc_data= [{"first_name": new_doc.first_name, "last_name": new_doc.last_name} for new_doc in new_docs]
+        
+        context = {
+            "new_users": user_data,
+            "new_docs": doc_data
+        }
+        return Response(context, 200)
+   
 class AdminData(BaseView):
     permission_classes = [permissions.IsAuthenticated]
     def get(self, request, format=None):
