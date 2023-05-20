@@ -160,6 +160,7 @@ class CardGenerator(models.Model):
     patient = models.ForeignKey(PrimaryUser, on_delete=models.CASCADE, limit_choices_to={"is_patient":True})
     medical_record = models.ForeignKey(MedicalData, on_delete=models.CASCADE, null=True)
     hospital_branch = models.CharField(max_length=100)
+    created_at = models.DateTimeField(auto_now_add=True, null=True)
    
     def __str__(self):
         return self.patient.last_name
