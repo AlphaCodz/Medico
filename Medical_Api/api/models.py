@@ -110,6 +110,7 @@ class Appointment(models.Model):
     schedule_date = models.DateTimeField(null=True)
     referral_letter = models.FileField(upload_to="ref_letters/", null=True)
     medical_issue = models.TextField(null=True)
+    created_at = models.DateTimeField(auto_now_add=True, null=True)
     
     def __str__(self):
         return self.user.first_name
