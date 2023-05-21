@@ -145,7 +145,7 @@ class Notification(APIView):
         return Response(context, 200)
    
 class AdminData(BaseView):
-    permission_classes = [permissions.IsAuthenticated]
+    # permission_classes = [permissions.IsAuthenticated]
     def get(self, request, format=None):
         admin_data = Jsonify_user(request.user)
         res = {
@@ -154,6 +154,7 @@ class AdminData(BaseView):
             "admin": admin_data
         }
         return Response(res)
+    
 class Login(BaseView):
     required_post_fields = ["email", "password"]
     def post(self, request, format=None):
@@ -197,7 +198,7 @@ class LogoutView(APIView):
         
         
 class AllDoctors(APIView):
-    permission_classes = [IsAuthenticated,]
+    # permission_classes = [IsAuthenticated,]
     def get(self, request, *args, **kwargs):
         # PAGINATE
         doctors = PrimaryUser.objects.filter(is_medic=True).order_by("id")
