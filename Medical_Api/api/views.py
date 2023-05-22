@@ -355,7 +355,7 @@ class GetMyAppointment(BaseView):
         appointments = Appointment.objects.filter(medic=user_id)
         data = [{"id":appointment.id, "first_name":appointment.user.first_name, "last_name": appointment.user.last_name, 
             "medical_case": appointment.medical_issue, "schedule_date": str(appointment.schedule_date.date()), 
-            "schedule_time": str(appointment.schedule_date.time())} for appointment in appointments]
+            "schedule_time": str(appointment.schedule_date.time()), "referral_letter": str(appointment.referral_letter)} for appointment in appointments]
         resp = {
             "code": 200,
             "data": data
